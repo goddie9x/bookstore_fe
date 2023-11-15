@@ -20,13 +20,14 @@
       </div>
       <div class="flex flex-col space-y-5 pl-4">
         <h2 class="text-black font-medium text-2xl">
-          {{ product.name }} <span class="text-black text-[1rem]"><i class="far fa-eye ml-2" /> {{ product.view }} Lượt xem</span>
+          {{ product.name }} <span class="text-black text-[1rem]"><i class="far fa-eye ml-2" /> {{ product.view }} Lượt
+            xem</span>
         </h2>
         <p class="text-black font-medium text-[1rem]">
-          <a-rate v-model="rating" disabled allow-half />  (Đánh Giá {{ product.rating }}/5)
+          <a-rate v-model="rating" disabled allow-half /> (Đánh Giá {{ product.rating }}/5)
         </p>
         <p class="text-black font-medium text-2xl">
-          ${{ product.price }} <span class="text-orange line-through ml-2">${{ product.price*1.2 }}</span>
+          ${{ product.price }} <span class="text-orange line-through ml-2">${{ product.price * 1.2 }}</span>
         </p>
         <p class="des_detail  text-[1rem] font-normal">
           {{ product.description }}
@@ -37,7 +38,7 @@
           </p>
           <div>
             <a-radio-group v-model="value" class="space-x-2" @change="onChangeRadio">
-              <a-radio-button v-for="(item,index) in product.size" :key="index" :value="item.name">
+              <a-radio-button v-for="(item, index) in product.size" :key="index" :value="item.name">
                 {{ item.name }}
               </a-radio-button>
               <!-- <a-radio-button value="M">
@@ -56,7 +57,7 @@
           <p class="text-black font-medium text-[1rem] mb-2">
             Số lượng
           </p>
-          <a-input-number v-model="valueNumber" :min="1" :max="number > 0? number : 1" @change="onChange" />
+          <a-input-number v-model="valueNumber" :min="1" :max="number > 0 ? number : 1" @change="onChange" />
         </div>
         <div class="flex cursor-pointer" @click="saveToFavorite(product._id)">
           <i class="fa-regular hover_item fa-heart lg:text-xl text-lg text-black transition-all hover:text-orange" />
@@ -64,14 +65,18 @@
             Thêm vào danh sách yêu thích
           </p>
         </div>
-        <button class="bg-black text-white font-medium w-36 py-[10px] px-2 transition-all hover:opacity-80" @click="addToCart">
+        <button class="bg-black text-white font-medium w-36 py-[10px] px-2 transition-all hover:opacity-80"
+          @click="addToCart">
           Thêm vào giỏ hàng
         </button>
       </div>
     </div>
-    <h2 class="text-black text-3xl font-semibold">
-          GỢI Ý THÊM
-    </h2>
+    <div class="my-10 px-12">
+      <h2 class="text-black text-3xl font-semibold">
+        GỢI Ý THÊM(Sản phẩm liên quan)
+      </h2>
+      <ProductsList :products="product.relatedProducts" />
+    </div>
     <Comment class="my-10 px-12" />
   </div>
 </template>
@@ -80,13 +85,15 @@
 // import Product from '@/components/Products.vue'
 import Carousel from '@/components/carousel/Carousel.vue'
 import Comment from '@/components/comment/Comment.vue'
+import ProductsList from '@/components/products_list/ProductsListContainer.vue'
+
 // import RadioSize from '@/components/radio/Radio.vue'
 export default {
   name: 'ProductDetailId',
 
   components: {
     // Product
-    Carousel, Comment
+    Carousel, Comment, ProductsList
   },
   data () {
     return {
@@ -204,28 +211,32 @@ export default {
 </script>
 
 <style lang="scss">
-.banner_single{
+.banner_single {
   @apply lg:py-48 pt-14 pb-32 lg:bg-[top_left] bg-[center];
-    background-image: url(@/static/banner/banner_single.png);
-    //padding-top: 150px;
-    padding-bot: 10px;
-    display: flex;
-    align-items: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
-    overflow: hidden;
+  background-image: url(@/static/banner/banner_single.png);
+  //padding-top: 150px;
+  padding-bot: 10px;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
 }
+
 .ant-input-number {
   margin-right: 10px;
 }
-.ant-radio-button-wrapper{
-        @apply px-5
-      }
-.ant-radio-button-wrapper:last-child{
-        @apply rounded-none;
-    }
-.ant-radio-button-wrapper:first-child{
-        @apply rounded-none;
-    }
+
+.ant-radio-button-wrapper {
+  @apply px-5
+}
+
+.ant-radio-button-wrapper:last-child {
+  @apply rounded-none;
+}
+
+.ant-radio-button-wrapper:first-child {
+  @apply rounded-none;
+}
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="m-5 lg:px-8 px-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div
+      :class="`grid grid-cols-${amountProductPerRow.default} md:grid-cols-${amountProductPerRow.md} lg:grid-cols-${ amountProductPerRow.lg } gap-8`">
       <div v-for="product in products" :key="product.id">
         <Products :detail="false" :product="product" />
       </div>
@@ -31,26 +32,31 @@ export default {
     products: {
       type: Array,
       default: () => []
+    },
+    amountProductPerRow: {
+      type: Object,
+      default: () => ({
+        default: 1,
+        md: 2,
+        lg: 4
+      })
     }
   },
 
   data () {
-    console.log(this.products)
-
     return {
       id: '',
       noProductLabel: 'No product found'
     }
   }
-
 }
 </script>
 
 <style lang="scss">
-  .img-wrapper{
-    img{
-      width: 280px;
-      height: 400px;
-    }
+.img-wrapper {
+  img {
+    width: 280px;
+    height: 400px;
   }
+}
 </style>

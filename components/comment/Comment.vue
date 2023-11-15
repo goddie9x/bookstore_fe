@@ -95,7 +95,7 @@ export default {
     },
     canEdit (userId) {
       console.log(userId)
-      return this.$store.getters.isAdmin || this.currentUser._id === userId
+      return this.$store.getters.isAdmin || this.currentUser?._id === userId
     },
     onSubmit () {
       if (this.isUserLoggedIn) {
