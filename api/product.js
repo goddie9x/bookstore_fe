@@ -4,6 +4,9 @@ export default (axios) => ({
   addProduct (form) {
     return axios.post('/products', form)
   },
+  getSearchSelections () {
+    return axios.get('/products/search-selections')
+  },
   searchProduct (datas) {
     const query = valiQuery(datas)
     return axios.get(`/products/?${query}`).then(_ => _.data)

@@ -1,6 +1,5 @@
 <template>
   <div :class="[ openModal ? 'fixed flex modal-animation ' : 'hidden', 'modal' ]">
-    <div class="modal-background" />
     <div class="modal-wrapper-search flex flex-col">
       <div class=" right-0 absolute p-5">
         <button class="delete bg-white w-10 h-10 rounded-[50%] " aria-label="close" @click="closeModal">
@@ -8,14 +7,38 @@
         </button>
       </div>
       <div class="h-full input-search flex flex-col justify-center items-center">
-        <form class="w-full  flex flex-col justify-center items-center" @submit.prevent="searchKeyWord(valueSearch)">
+        <form class="grid grid-cols-12 gap-10 w-full " @submit.prevent="searchKeyWord(valueSearch)">
           <a-input
             v-model="valueSearch"
             placeholder="Type keyword here"
-            class="w-2/3 mb-5 rounded-none font-medium text-white text-xl bg-transparent border-l-0 border-r-0 border-t-0 border-b-2"
-            @keyup="onSearch(valueSearch)"
+            class="col-span-4 mb-5 rounded-none font-medium text-white text-xl bg-transparent border-l-0 border-r-0 border-t-0 border-b-2"
+            @keyup="onSearch"
           />
-          <button class="bg-transparent text-grey_light/10 text-lg font-normal" type="submit">
+          <a-select
+            ref="category"
+            v-model="category"
+            @change="onSearch"
+            class="col-span-2 text-light"
+          >
+            <a-select-option v-for="(item,index) in listCategories" :key="index" :value="item">{{ item }}</a-select-option>
+          </a-select>
+          <a-select
+            ref="subject"
+            v-model="subject"
+            @change="onSearch"
+            class="col-span-2"
+          >
+            <a-select-option v-for="(item,index) in listSubjects" :key="index" :value="item">{{ item }}</a-select-option>
+          </a-select>
+          <a-select
+            ref="priceRangeIndex"
+            v-model="priceRangeIndex"
+            @change="onSearch"
+            class="col-span-2"
+          >
+            <a-select-option v-for="(item,index) in priceRanges" :key="index" :value="index">{{ item.label }}</a-select-option>
+          </a-select>
+          <button class="mb-5 col-span-2 text-white text-lg font-normal" type="submit">
             Search
           </button>
         </form>
@@ -58,12 +81,19 @@ export default {
   data () {
     return {
       valueSearch: '',
-      data: {}
+      data: {},
+      listCategories: [],
+      listSubjects: [],
+      priceRanges: [],
+      category: '',
+      subject: null,
+      priceRangeIndex: null
     }
   },
-
+  mounted () {
+    this.getSearchSelections()
+  },
   computed: {
-
     openModal () {
       if (this.$store.getters.isSearchModalOpen) {
         return true
@@ -78,14 +108,35 @@ export default {
       this.$store.commit('showSearchModal', false)
       console.log('ok')
     },
-    onSearch (value) {
-      console.log(value)
-      this.getProductSearchKeyUp(value)
+    onSearch () {
+      this.getProductSearchKeyUp()
     },
-    async getProductSearchKeyUp (query) {
+    async getSearchSelections () {
       try {
-        const restData = await this.$api.product.searchProduct({ search: query, page: 1, limit: 20, sort: '-_id' })
-        console.log(restData)
+        const res = await this.$api.product.getSearchSelections()
+        const searchSelections = res.data
+        if (searchSelections) {
+          this.listCategories = searchSelections.listCategories
+          this.listSubjects = searchSelections.listSubjects
+          this.priceRanges = searchSelections.priceRanges
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getProductSearchKeyUp () {
+      try {
+        const priceRange = this.priceRanges&&this.priceRangeIndex?this.priceRanges[this.priceRangeIndex]:null
+        const restData = await this.$api.product.searchProduct({
+          search: this.valueSearch,
+          subject: this.subject,
+          minPrice: priceRange?.value?.minPrice ?? '',
+          maxPrice: priceRange?.value?.maxPrice ?? '',
+          category: this.category,
+          page: 1,
+          limit: 20,
+          sort: '-_id'
+        })
         this.data = restData.products
       } catch (error) {
         console.log(error)
@@ -102,6 +153,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .modal-wrapper-search{
+    background: #f83c91;
+  }
   .fa-exclamation-circle {
     @apply text-red;
   }
