@@ -36,6 +36,16 @@
                 "
               />
             </a-form-model-item>
+            <a-form-model-item ref="email" label="Email(bạn sẽ nhận được thông báo đặt hàng qua mail)" prop="email">
+              <a-input
+                v-model="form.email"
+                @blur="
+                  () => {
+                    $refs.email.onFieldBlur();
+                  }
+                "
+              />
+            </a-form-model-item>
             <a-form-model-item label="Dịa chỉ giao hàng" prop="deliveryAddress">
               <a-input v-model="form.deliveryAddress" type="textarea" />
             </a-form-model-item>
@@ -85,7 +95,7 @@
   </div>
 </template>
 <script>
-import { isValidUserName, isValidPhone } from '@/assets/validators.js'
+import { isValidUserName, isValidPhone, isValidEmail } from '@/assets/validators.js'
 export default {
   props: ['totalCart', 'cartId'],
   data () {
@@ -94,7 +104,8 @@ export default {
       form: {
         fullName: '',
         phoneNumber: '',
-        deliveryAddress: ''
+        deliveryAddress: '',
+        email: ''
       },
       rules: {
         fullName: [{
@@ -118,6 +129,17 @@ export default {
               callback()
             } else {
               callback(new Error('Yêu cầu nhập số điện thoại'))
+            }
+          }
+        }],
+        email: [{
+          required: true,
+          trigger: 'blur',
+          validator (rule, value, callback) {
+            if (isValidEmail(value)) {
+              callback()
+            } else {
+              callback(new Error('Vui lòng nhập đúng email'))
             }
           }
         }]

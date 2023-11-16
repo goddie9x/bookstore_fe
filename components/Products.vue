@@ -11,6 +11,7 @@
             rating: product.rating,
             category:product.category,
             images:product.images,
+            numberInStock:product.numberInStock,
             price: product.price,
             originalPrice:product.originalPrice,
             sold:product.sold,
@@ -55,6 +56,7 @@
               description:product.description,
               rating: product.rating,
               category:product.category,
+              numberInStock:product.numberInStock,
               images:product.images,
               price: product.price,
               originalPrice:product.originalPrice,
@@ -130,7 +132,6 @@ export default {
           const cart = {
             user: userData.data._id,
             product: productId,
-            // size: 'L',
             quantity: 1
           }
           await this.$api.cart.addToCart(cart)

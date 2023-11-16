@@ -96,7 +96,7 @@ export default {
   methods: {
     async addToCart () {
       if (!this.value) {
-        this.$toast.warning('Please choose size', { timeout: 1500 })
+        this.$toast.warning('Please input amount', { timeout: 1500 })
       } else if (this.isUserLoggedIn) {
         try {
           const token = localStorage.getItem('token')

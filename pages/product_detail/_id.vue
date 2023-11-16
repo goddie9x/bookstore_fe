@@ -36,28 +36,12 @@
           <p class="text-black font-medium text-[1rem] mb-2">
             Kho: {{ product.numberInStock }}
           </p>
-          <div>
-            <a-radio-group v-model="value" class="space-x-2" @change="onChangeRadio">
-              <a-radio-button v-for="(item, index) in product.size" :key="index" :value="item.name">
-                {{ item.name }}
-              </a-radio-button>
-              <!-- <a-radio-button value="M">
-                M
-              </a-radio-button>
-              <a-radio-button value="S">
-                S
-              </a-radio-button> -->
-            </a-radio-group>
-            <!-- <p v-if="value!=''" class="pt-2 text-black">
-              {{ number }} products available
-            </p> -->
-          </div>
         </div>
         <div class="flex flex-col">
           <p class="text-black font-medium text-[1rem] mb-2">
             Số lượng
           </p>
-          <a-input-number v-model="valueNumber" :min="1" :max="number > 0 ? number : 1" @change="onChange" />
+          <a-input-number v-model="valueNumber" :min="1" :max="product.numberInStock > 0 ? product.numberInStock : 1" @change="onChange" />
         </div>
         <div class="flex cursor-pointer" @click="saveToFavorite(product._id)">
           <i class="fa-regular hover_item fa-heart lg:text-xl text-lg text-black transition-all hover:text-orange" />
@@ -117,17 +101,14 @@ export default {
 
   methods: {
     async addToCart () {
-      if (!this.value) {
-        this.$toast.error('Please choose size', { timeout: 1500 })
-      } else if (this.isUserLoggedIn) {
+      if (this.isUserLoggedIn) {
         try {
           const token = localStorage.getItem('token')
           const userData = await this.$api.auth.secret(token)
           const cart = {
             user: userData.data._id,
             product: this.$route.params.id,
-            quantity: this.valueNumber,
-            size: this.value
+            quantity: this.valueNumber
           }
           await this.$api.cart.addToCart(cart)
           this.$store.dispatch('dataCart')
@@ -136,6 +117,7 @@ export default {
           this.$toast.success('Add cart successfully', { timeout: 1500 })
         } catch (error) {
           console.log('error')
+          this.$toast.error('Add cart failed, please check the number of your booking', { timeout: 1500 })
         }
       } else {
         this.$store.commit('showLoginModal', true)
