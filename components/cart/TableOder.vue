@@ -50,7 +50,6 @@
       </div>
       <div slot="expandedRowRender" slot-scope="record" style="margin: 0" class="grid-cols-5 grid mx-20">
         <div class="ml-20 grid-cols-1 space-y-1 text-[1rem] font-medium text-black">
-
           <p>Số Lượng:   </p>
         </div>
         <div class="grid-cols-3 space-y-1">

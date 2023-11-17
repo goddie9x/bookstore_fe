@@ -14,30 +14,50 @@
             class="col-span-4 mb-5 rounded-none font-medium text-white text-xl bg-transparent border-l-0 border-r-0 border-t-0 border-b-2"
             @keyup="onSearch"
           />
-          <a-select
+          <div class="col-span-2 text-white">
+            <div class="select-label">
+              Category
+            </div>
+            <a-select
+            label="Category"
             ref="category"
             v-model="category"
             @change="onSearch"
-            class="col-span-2 text-light"
+            :default-value="null"
           >
             <a-select-option v-for="(item,index) in listCategories" :key="index" :value="item">{{ item }}</a-select-option>
           </a-select>
-          <a-select
+          </div>
+          <div class="col-span-2 text-white">
+            <div class="select-label">
+              Subject
+            </div>
+            <a-select
             ref="subject"
+            label="Subject"
             v-model="subject"
             @change="onSearch"
+            :default-value="null"
             class="col-span-2"
           >
             <a-select-option v-for="(item,index) in listSubjects" :key="index" :value="item">{{ item }}</a-select-option>
           </a-select>
-          <a-select
+          </div>
+          <div class="col-span-2 text-white">
+            <div class="select-label">
+              Price range
+            </div>
+            <a-select
+            label="Price range"
             ref="priceRangeIndex"
             v-model="priceRangeIndex"
             @change="onSearch"
+            :default-value="null"
             class="col-span-2"
           >
             <a-select-option v-for="(item,index) in priceRanges" :key="index" :value="index">{{ item.label }}</a-select-option>
           </a-select>
+          </div>
           <button class="mb-5 col-span-2 text-white text-lg font-normal" type="submit">
             Search
           </button>
@@ -116,6 +136,9 @@ export default {
         const res = await this.$api.product.getSearchSelections()
         const searchSelections = res.data
         if (searchSelections) {
+          searchSelections.listCategories.unshift('null')
+          searchSelections.listSubjects.unshift('null')
+          searchSelections.priceRanges.unshift({ label: 'default', value: null })
           this.listCategories = searchSelections.listCategories
           this.listSubjects = searchSelections.listSubjects
           this.priceRanges = searchSelections.priceRanges
@@ -126,7 +149,7 @@ export default {
     },
     async getProductSearchKeyUp () {
       try {
-        const priceRange = this.priceRanges&&this.priceRangeIndex?this.priceRanges[this.priceRangeIndex]:null
+        const priceRange = this.priceRanges && this.priceRangeIndex ? this.priceRanges[this.priceRangeIndex] : null
         const restData = await this.$api.product.searchProduct({
           search: this.valueSearch,
           subject: this.subject,

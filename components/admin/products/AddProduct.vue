@@ -30,35 +30,19 @@
       <a-form-model-item label="Mô tả" prop="description">
         <a-input v-model="form.description" type="textarea" :rows="4" />
       </a-form-model-item>
-      <div class="grid">
-        <div v-for="(item,index) in form.size" :key="index" class="grid grid-cols-2 gap-7">
-          <a-form-model-item
-            label="Số lượng kho"
-            :prop="'size.' +index+'.name'"
-            :rules="{
-              required: true,
-              trigger: 'blur',
-            }"
-          >
-            <a-input
-              v-model="item.name"
-            />
-          </a-form-model-item>
-
-          <a-form-model-item
-            label="Số lượng"
-            :prop="'size.' +index+'.numberInStock'"
-            :rules="{
-              required: true,
-              // message: 'Please input Activity Number',
-              trigger: 'blur',
-            }"
-          >
-            <a-input
-              v-model="item.numberInStock"
-            />
-          </a-form-model-item>
-        </div>
+      <a-form-model-item
+        label="Số lượng"
+        prop="numberInStock"
+        :rules="{
+          required: true,
+          message: 'Please input Activity Number',
+          trigger: 'blur',
+        }"
+      >
+        <a-input
+          v-model="form.numberInStock"
+        />
+      </a-form-model-item>
         <!-- <a-form-model-item>
           <div>
             <a-button class="bg-blue text-white" @click="AddSize">
@@ -69,7 +53,6 @@
             </a-button>
           </div>
         </a-form-model-item> -->
-      </div>
       <a-form-model-item label="Ảnh">
         <div class="mt-6">
           <div v-if="formDataIm.datas.length >0" class="grid grid-cols-8 gap-6">
@@ -159,7 +142,7 @@ export default {
         name: '',
         category: '',
         description: '',
-        size: [{ name: '', numberInStock: '' }],
+        numberInStock: '',
         images: [],
         subject: false,
         price: '',
@@ -198,9 +181,7 @@ export default {
             }
           }
         }],
-        // number: [{ required: true, message: 'Please input activity number', trigger: 'blur' }],
         images: [{ required: true, message: 'Please input activity images', trigger: 'blur' }]
-
       }
     }
   },
